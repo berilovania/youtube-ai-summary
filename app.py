@@ -9,26 +9,25 @@ import re
 
 st.set_page_config(page_title="Resumo de Vídeo", layout="centered")
 
-# Destaque do autor
 st.markdown("<h4 style='color: #4CAF50;'>Desenvolvido por <b>Matheus Santos</b></h4>", unsafe_allow_html=True)
 
-# Título principal
 st.title("📺 Resumo de Vídeo do YouTube com IA")
 
 # API Key
 MISTRAL_API_KEY = st.secrets["MISTRAL_API_KEY"]
 
-# Mensagem de status dinâmica
 status_message = st.empty()
 
-# Função para gerar o resumo com a API Mistral
+# Função da api
 def gerar_resumo_mistral(texto, is_music=False):
     url = "https://api.mistral.ai/v1/chat/completions"
     headers = {
         "Authorization": f"Bearer {MISTRAL_API_KEY}",
         "Content-Type": "application/json"
     }
-
+    # essas sao categorias que o usuario pode escolher
+    # se for uma música, o resumo é diferente
+    # se for um vídeo normal, o resumo é mais curto e em tópicos :)    
     if is_music:
         instrucoes = (
             "Responda em português. Resuma o conteúdo abaixo de forma clara e objetiva, "
@@ -41,6 +40,9 @@ def gerar_resumo_mistral(texto, is_music=False):
             "em no máximo 5 tópicos curtos. Evite repetições e textos longos para economizar tokens."
         )
 
+    # aqui é o modelo que será usado
+    # o mistral-tiny é o modelo mais barato e rápido
+    # mas se quiser usar outro, basta trocar o nome do modelo aqui
     payload = {
         "model": "mistral-tiny",
         "messages": [
@@ -50,13 +52,16 @@ def gerar_resumo_mistral(texto, is_music=False):
         "temperature": 0.7
     }
 
+    # faz a requisição para a API Mistral
+    # e retorna o resumo
     response = requests.post(url, headers=headers, json=payload)
     if response.status_code == 200:
         return response.json()['choices'][0]['message']['content']
     else:
         raise Exception(f"Erro na API Mistral ({response.status_code}): {response.text}")
 
-# Função para gerar PDF a partir de texto
+# Função do PDFF
+# Cria um PDF a partir do texto
 def criar_pdf_bytes(texto):
     pdf = FPDF()
     pdf.add_page()
@@ -65,15 +70,20 @@ def criar_pdf_bytes(texto):
         pdf.multi_cell(0, 10, linha)
     return pdf.output(dest='S').encode('latin1')
 
-# Função para extrair ID do vídeo de forma robusta
+# Função para saber se o link é do YT ou não
+# Extrai o ID do vídeo do link do YouTube
+# Essa função usa regex para encontrar o ID do vídeo
+# O ID do vídeo é uma string de 11 caracteres alfanuméricos
+# que aparece no link do YouTube após "v=" ou "be/"
+import re
 def extrair_video_id(link):
     match = re.search(r"(?:v=|be/)([a-zA-Z0-9_-]{11})", link)
     return match.group(1) if match else None
 
-# Entrada do link do YouTube
+# Link YT
 link = st.text_input("Cole o link do vídeo do YouTube que tenha legenda")
 
-# Seletor de tipo
+# botao de status para selecionar o tipo de conteúdo
 tipo_resumo = st.selectbox("Tipo de conteúdo", ["---- Selecione a opção ----", "Resumo de vídeo", "Significado da música"])
 
 # Botão abaixo do seletor
@@ -82,14 +92,15 @@ gerar = st.button("Gerar Resumo")
 # Lógica ao clicar no botão
 if gerar:
     if tipo_resumo == "---- Selecione a opção ----":
-        status_message.info("⚠️ Por favor, selecione o tipo de conteúdo antes de continuar.")
+        status_message.info ("⚠️ Por favor, selecione o tipo de conteúdo antes de continuar.")
     elif not link:
-        status_message.warning("Por favor, insira um link válido.")
+        status_message.warning ("Por favor, insira um link válido.")
     else:
         try:
-            status_message.info("⌛ Processando...")
+            status_message.info ("⌛ Processando...")
 
             # Extrai o ID do vídeo de forma segura
+            # Verifica se o link é válido e extrai o ID
             video_id = extrair_video_id(link)
             if not video_id:
                 raise ValueError("Não foi possível extrair o ID do vídeo do link informado.")
@@ -100,7 +111,7 @@ if gerar:
             transcript = transcript_obj.to_raw_data()
             texto = " ".join([entry['text'] for entry in transcript])
 
-            # Exibe a transcrição (bloqueada para edição)
+            # Exibe a transcrição com uma área de texto estilizada
             st.markdown("📝 **Transcrição**")
             st.markdown(
                 f"""
@@ -151,6 +162,7 @@ if gerar:
             time.sleep(3)
             status_message.empty()
 
+        # Algumas exceções específicas para tratamento de erros que podem ocorrer ao extrair a transcrição ou gerar o resumo
         except TranscriptsDisabled:
             status_message.error("Esse vídeo não possui transcrição disponível.")
         except VideoUnavailable:
