@@ -27,7 +27,7 @@
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/seu-repositorio.git
+git clone https://github.com/berilovania/youtube-ai-summary.git
 
 # Entre na pasta do projeto
 cd seu-repositorio
