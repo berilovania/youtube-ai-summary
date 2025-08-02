@@ -78,6 +78,46 @@ No navegador:
 
 ---
 
+### 🔄 Alternativa: Usar a API do ChatGPT (OpenAI)
+
+Se preferir, você também pode usar a **API do ChatGPT da OpenAI** no lugar da Mistral. Para isso:
+
+#### 1️⃣ Instale o pacote:
+
+```bash
+pip install openai
+```
+
+#### 2️⃣ Atualize o arquivo `.streamlit/secrets.toml` com sua chave:
+
+```toml
+OPENAI_API_KEY = "sua-chave-da-openai"
+```
+
+#### 3️⃣ Adapte o trecho no `app.py` para usar OpenAI:
+
+```python
+from openai import OpenAI
+
+# Se preferir usar o OpenAI em vez do Mistral:
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+response = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "Você é um assistente que resume vídeos."},
+        {"role": "user", "content": prompt}
+    ]
+)
+
+resumo = response.choices[0].message.content
+```
+
+> **Observação**: O projeto está configurado por padrão para usar a **Mistral AI**, mas o código é modular e pode ser adaptado facilmente para diferentes provedores de IA.
+
+---
+
+
 ## 📦 Dependências (`requirements.txt`)
 
 ```txt
