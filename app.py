@@ -6,7 +6,6 @@ from youtube_transcript_api._errors import TranscriptsDisabled, VideoUnavailable
 from fpdf import FPDF
 import io
 import re
-from pytube import YouTube
 
 st.set_page_config(page_title="Resumo de Vídeo", layout="centered")
 
@@ -53,6 +52,7 @@ def gerar_resumo_mistral(texto, is_music=False):
         ],
         "temperature": 0.7
     }
+
     # faz a requisição para a API Mistral
     # e retorna o resumo
     response = requests.post(url, headers=headers, json=payload)
@@ -106,10 +106,6 @@ if gerar:
             if not video_id:
                 raise ValueError("Não foi possível extrair o ID do vídeo do link informado.")
 
-            # Cria o objeto YouTube para obter informações do vídeo
-            yt = YouTube(link)
-            titulo_video = yt.title
-            
             # Extrai a transcrição
             ytt_api = YouTubeTranscriptApi()
             transcript_obj = ytt_api.fetch(video_id, languages=['pt', 'pt-BR', 'en'])
@@ -117,7 +113,6 @@ if gerar:
             texto = " ".join([entry['text'] for entry in transcript])
 
             # Exibe a transcrição com uma área de texto estilizada
-            st.markdown(f"### 🎬 {titulo_video}")
             st.markdown("📝 **Transcrição**")
             st.markdown(
                 f"""
