@@ -6,10 +6,12 @@ from youtube_transcript_api._errors import TranscriptsDisabled, VideoUnavailable
 from fpdf import FPDF
 import io
 import re
+from pytube import YouTube
 
 st.set_page_config(page_title="Resumo de Vídeo", layout="centered")
 
-st.markdown("<h4 style='color: #4CAF50;'>Desenvolvido por <b>Matheus Santos</b></h4>", unsafe_allow_html=True)
+# Título e descrição do app
+# st.markdown("<h4 style='color: #4CAF50;'>Desenvolvido por <b>Matheus Santos</b></h4>", unsafe_allow_html=True)
 
 st.title("📺 Resumo de Vídeo do YouTube com IA")
 
@@ -51,7 +53,6 @@ def gerar_resumo_mistral(texto, is_music=False):
         ],
         "temperature": 0.7
     }
-
     # faz a requisição para a API Mistral
     # e retorna o resumo
     response = requests.post(url, headers=headers, json=payload)
@@ -84,7 +85,7 @@ def extrair_video_id(link):
 link = st.text_input("Cole o link do vídeo do YouTube que tenha legenda")
 
 # botao de status para selecionar o tipo de conteúdo
-tipo_resumo = st.selectbox("Tipo de conteúdo", ["---- Selecione a opção ----", "Resumo de vídeo", "Significado da música"])
+tipo_resumo = st.selectbox("Tipo de conteúdo", ["---- Selecione a opção ----", "Resumo de vídeo", "Significado de uma música"])
 
 # Botão abaixo do seletor
 gerar = st.button("Gerar Resumo")
@@ -105,6 +106,10 @@ if gerar:
             if not video_id:
                 raise ValueError("Não foi possível extrair o ID do vídeo do link informado.")
 
+            # Cria o objeto YouTube para obter informações do vídeo
+            yt = YouTube(link)
+            titulo_video = yt.title
+            
             # Extrai a transcrição
             ytt_api = YouTubeTranscriptApi()
             transcript_obj = ytt_api.fetch(video_id, languages=['pt', 'pt-BR', 'en'])
@@ -112,6 +117,7 @@ if gerar:
             texto = " ".join([entry['text'] for entry in transcript])
 
             # Exibe a transcrição com uma área de texto estilizada
+            st.markdown(f"### 🎬 {titulo_video}")
             st.markdown("📝 **Transcrição**")
             st.markdown(
                 f"""
