@@ -71,7 +71,7 @@ No navegador:
 1. Cole o link de um vídeo com **legenda ativada**
 2. Escolha uma opção:
    - `Resumo de vídeo`
-   - `Significado da música`
+   - `Significado de uma música`
 3. Clique em **Gerar Resumo**
 4. Visualize a transcrição + resumo/explicação
 5. Exporte se desejar
@@ -123,7 +123,7 @@ resumo = response.choices[0].message.content
 ```txt
 streamlit==1.24.1
 youtube-transcript-api==1.2.1
-pypdf2==3.0.1
+fpdf2==2.7.9
 requests==2.32.4
 ```
 
@@ -137,7 +137,7 @@ requests==2.32.4
 | Streamlit              | Interface web rápida                     |
 | youtube-transcript-api | Captura de legendas do YouTube           |
 | Mistral AI API         | Geração de resumos/interpretações via IA |
-| PyPDF2                 | Exportação para PDF                      |
+| fpdf2                  | Exportação para PDF                      |
 
 ---
 

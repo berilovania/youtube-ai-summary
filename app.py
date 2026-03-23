@@ -55,7 +55,7 @@ def gerar_resumo_mistral(texto, is_music=False):
 
     # faz a requisição para a API Mistral
     # e retorna o resumo
-    response = requests.post(url, headers=headers, json=payload)
+    response = requests.post(url, headers=headers, json=payload, timeout=30)
     if response.status_code == 200:
         return response.json()['choices'][0]['message']['content']
     else:
@@ -76,7 +76,6 @@ def criar_pdf_bytes(texto):
 # Essa função usa regex para encontrar o ID do vídeo
 # O ID do vídeo é uma string de 11 caracteres alfanuméricos
 # que aparece no link do YouTube após "v=" ou "be/"
-import re
 def extrair_video_id(link):
     match = re.search(r"(?:v=|be/)([a-zA-Z0-9_-]{11})", link)
     return match.group(1) if match else None
@@ -133,7 +132,7 @@ if gerar:
             )
 
             # Define o tipo selecionado
-            is_music = tipo_resumo == "Significado da música"
+            is_music = tipo_resumo == "Significado de uma música"
 
             # Gera o resumo
             resumo = gerar_resumo_mistral(texto, is_music)
