@@ -118,9 +118,13 @@ def summarize(req: SummarizeRequest):
 @app.post("/export/pdf")
 def export_pdf(req: ExportRequest):
     pdf = FPDF()
+    pdf.set_compression(False)
     pdf.add_page()
+    pdf.set_font("Helvetica", style="B", size=16)
+    pdf.multi_cell(0, 10, req.title)
+    pdf.ln(4)
     pdf.set_font("Helvetica", size=12)
-    pdf.multi_cell(0, 10, text=req.summary)
+    pdf.multi_cell(0, 10, req.summary)
     pdf_bytes = bytes(pdf.output())
     return Response(
         content=pdf_bytes,

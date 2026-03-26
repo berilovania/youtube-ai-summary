@@ -147,3 +147,4 @@ def test_export_pdf_returns_pdf():
     assert response.status_code == 200
     assert response.headers["content-type"] == "application/pdf"
     assert response.content[:4] == b"%PDF"
+    assert b"Teste de PDF" in response.content
