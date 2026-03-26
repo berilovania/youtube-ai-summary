@@ -48,6 +48,9 @@ def test_summarize_invalid_mode_still_works():
         })
         assert response.status_code == 200
         assert response.json()["summary"] == mock_summary
+        # Verify topics-style prompt was used (not music prose)
+        call_payload = mock_post.call_args.kwargs["json"]
+        assert "5 tópicos" in call_payload["messages"][1]["content"]
 
 
 def test_summarize_topics_success():
@@ -103,7 +106,7 @@ def test_summarize_music_mode():
         })
         assert response.status_code == 200
         # Verificar que a instrução de música foi usada (sem tópicos)
-        call_payload = mock_post.call_args[1]["json"]
+        call_payload = mock_post.call_args.kwargs["json"]
         assert "texto corrido" in call_payload["messages"][1]["content"]
 
 
@@ -148,3 +151,51 @@ def test_export_pdf_returns_pdf():
     assert response.headers["content-type"] == "application/pdf"
     assert response.content[:4] == b"%PDF"
     assert b"Teste de PDF" in response.content
+
+
+def test_summarize_mistral_failure():
+    mock_transcript = [{"text": "Hello"}]
+
+    with patch("main.YouTubeTranscriptApi") as MockYTT, \
+         patch("main.requests.post") as mock_post:
+
+        inst = MagicMock()
+        MockYTT.return_value = inst
+        fetch_obj = MagicMock()
+        fetch_obj.to_raw_data.return_value = mock_transcript
+        inst.fetch.return_value = fetch_obj
+
+        resp = MagicMock()
+        resp.status_code = 401
+        resp.text = "Unauthorized"
+        mock_post.return_value = resp
+
+        response = client.post("/summarize", json={
+            "url": "https://youtu.be/dQw4w9WgXcQ",
+            "mode": "topics"
+        })
+        assert response.status_code == 503
+        assert "Mistral" in response.json()["detail"] or "401" in response.json()["detail"]
+
+
+def test_summarize_mistral_timeout():
+    import requests as req_module
+    mock_transcript = [{"text": "Hello"}]
+
+    with patch("main.YouTubeTranscriptApi") as MockYTT, \
+         patch("main.requests.post") as mock_post:
+
+        inst = MagicMock()
+        MockYTT.return_value = inst
+        fetch_obj = MagicMock()
+        fetch_obj.to_raw_data.return_value = mock_transcript
+        inst.fetch.return_value = fetch_obj
+
+        mock_post.side_effect = req_module.Timeout()
+
+        response = client.post("/summarize", json={
+            "url": "https://youtu.be/dQw4w9WgXcQ",
+            "mode": "topics"
+        })
+        assert response.status_code == 503
+        assert "limite" in response.json()["detail"].lower() or "timeout" in response.json()["detail"].lower()

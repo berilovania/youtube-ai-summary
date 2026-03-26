@@ -2,7 +2,6 @@
 import os
 import re
 import time
-import io
 
 import requests
 from fastapi import FastAPI, HTTPException
@@ -109,9 +108,16 @@ def summarize(req: SummarizeRequest):
         )
 
     is_music = req.mode == "music"
-    summary = gerar_resumo_mistral(texto, is_music)
-    duration_ms = int((time.time() - start) * 1000)
+    try:
+        summary = gerar_resumo_mistral(texto, is_music)
+    except requests.Timeout:
+        raise HTTPException(
+            status_code=503, detail="Tempo limite excedido ao chamar a API Mistral."
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail=str(exc))
 
+    duration_ms = int((time.time() - start) * 1000)
     return {"summary": summary, "title": f"Vídeo {video_id}", "duration_ms": duration_ms}
 
 
