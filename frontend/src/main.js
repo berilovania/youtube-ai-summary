@@ -9,7 +9,7 @@ initParticles()
 // Animate header on load
 const header = document.getElementById('app-header')
 requestAnimationFrame(() => {
-  setTimeout(() => header.classList.add('visible'), 100)
+  setTimeout(() => header?.classList.add('visible'), 100)
 })
 
 // View Router
@@ -35,7 +35,8 @@ function navigate(view) {
       renderHistory(viewContainer, openModal)
     }
 
-    viewContainer.style.opacity = '0'
+    // Double rAF forces a browser layout flush before restoring opacity,
+    // ensuring the CSS transition runs after the new view is painted.
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         viewContainer.style.opacity = '1'
@@ -71,7 +72,7 @@ modalOverlay.addEventListener('click', (e) => {
   if (e.target === modalOverlay) closeModal()
 })
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeModal()
+  if (e.key === 'Escape' && !modalOverlay.classList.contains('hidden')) closeModal()
 })
 
 // Initial render

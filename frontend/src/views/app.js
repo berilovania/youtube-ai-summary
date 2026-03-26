@@ -4,6 +4,14 @@ import { createLoader } from '../components/loader.js'
 import { typewriterReveal } from '../components/typewriter.js'
 import { addToHistory } from './history.js'
 
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
+
 /**
  * Extrai video_id de uma URL do YouTube.
  * @param {string} url
@@ -116,9 +124,11 @@ export function renderApp(container) {
     })
   })
 
+  let bannerTimer = null
   function showBanner(msg, type = 'error') {
-    bannerArea.innerHTML = `<div class="banner ${type}">${msg}</div>`
-    setTimeout(() => { bannerArea.innerHTML = '' }, 6000)
+    clearTimeout(bannerTimer)
+    bannerArea.innerHTML = `<div class="banner ${type}">${escapeHtml(msg)}</div>`
+    bannerTimer = setTimeout(() => { bannerArea.innerHTML = '' }, 6000)
   }
 
   btnGenerate.addEventListener('click', async (e) => {

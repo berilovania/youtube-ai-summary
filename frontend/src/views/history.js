@@ -1,6 +1,14 @@
 // frontend/src/views/history.js
 import { downloadTxt, exportPdf, downloadBlob } from '../api.js'
 
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
+
 const STORAGE_KEY = 'yt_summary_history'
 const MAX_ENTRIES = 20
 
@@ -107,7 +115,7 @@ export function renderHistory(container, openModal) {
         onerror="this.style.display='none'"
       />
       <div class="history-body">
-        <div class="history-title">${entry.title}</div>
+        <div class="history-title">${escapeHtml(entry.title)}</div>
         <div class="history-meta">
           <span class="history-date">${formatDate(entry.created_at)}</span>
           <span class="mode-badge ${badgeClass}">${badgeLabel}</span>
@@ -150,12 +158,12 @@ export function renderHistoryModal(entry) {
 
   const wrap = document.createElement('div')
   wrap.innerHTML = `
-    <div class="modal-title">${entry.title}</div>
+    <div class="modal-title">${escapeHtml(entry.title)}</div>
     <div class="modal-meta">
       <span>${formatDate(entry.created_at)}</span>
       <span class="mode-badge ${badgeClass}">${badgeLabel}</span>
     </div>
-    <div class="modal-summary">${entry.summary}</div>
+    <div class="modal-summary">${escapeHtml(entry.summary)}</div>
     <div class="modal-actions">
       <button class="btn-download" id="modal-dl-txt">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
