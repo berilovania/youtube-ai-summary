@@ -169,16 +169,6 @@ body {
   margin-bottom: 40px;
 }
 
-/* ── Section labels ──────────────────────────────────── */
-.section-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-}
-
 /* ── Responsivo ──────────────────────────────────────── */
 @media (max-width: 640px) {
   #view-container { padding: 32px 16px 60px; }

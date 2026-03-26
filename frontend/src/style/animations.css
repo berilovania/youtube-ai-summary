@@ -17,11 +17,6 @@
 }
 
 /* ── Glow pulse ──────────────────────────────────────── */
-@keyframes glowPulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.2), var(--shadow-glass); }
-  50%       { box-shadow: 0 0 50px rgba(124, 58, 237, 0.5), var(--shadow-glass); }
-}
-
 @keyframes glowPulseFast {
   0%, 100% { box-shadow: 0 0 30px rgba(124, 58, 237, 0.4), var(--shadow-glass); }
   50%       { box-shadow: 0 0 70px rgba(124, 58, 237, 0.8), var(--shadow-glass); }
@@ -47,12 +42,6 @@
 @keyframes hexPulse {
   0%, 100% { opacity: 0.6; transform: scale(1) rotate(0deg); }
   50%       { opacity: 1;   transform: scale(1.08) rotate(180deg); }
-}
-
-/* ── Shimmer botão ───────────────────────────────────── */
-@keyframes btnShimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position:  200% center; }
 }
 
 /* ── Bounce ícone ────────────────────────────────────── */

@@ -104,6 +104,7 @@ env/
 .venv/
 .env/
 docs/
+.superpowers/
 # Spyder project settings
 .spyderproject
 .spyproject

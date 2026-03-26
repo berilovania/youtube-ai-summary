@@ -32,7 +32,7 @@ function addRipple(btn, e) {
   const ripple = document.createElement('span')
   ripple.className = 'ripple'
   ripple.style.left = `${e.clientX - rect.left}px`
-  ripple.style.top  = `${e.clientY - rect.top}px`
+  ripple.style.top = `${e.clientY - rect.top}px`
   btn.appendChild(ripple)
   ripple.addEventListener('animationend', () => ripple.remove())
 }
@@ -78,7 +78,7 @@ export function renderApp(container) {
       </div>
 
       <button class="btn-primary anim-slide-up" id="btn-generate" data-stagger="5">
-        Gerar Resumo ✨
+        Gerar Resumo
       </button>
 
       <div id="banner-area"></div>
@@ -88,25 +88,25 @@ export function renderApp(container) {
     <div id="result-area"></div>
   `
 
-  const urlInput    = container.querySelector('#url-input')
+  const urlInput = container.querySelector('#url-input')
   const btnGenerate = container.querySelector('#btn-generate')
-  const modeSelector= container.querySelector('#mode-selector')
-  const modePill    = container.querySelector('#mode-pill')
-  const bannerArea  = container.querySelector('#banner-area')
-  const loaderArea  = container.querySelector('#loader-area')
-  const resultArea  = container.querySelector('#result-area')
-  const mainCard    = container.querySelector('#main-card')
+  const modeSelector = container.querySelector('#mode-selector')
+  const modePill = container.querySelector('#mode-pill')
+  const bannerArea = container.querySelector('#banner-area')
+  const loaderArea = container.querySelector('#loader-area')
+  const resultArea = container.querySelector('#result-area')
+  const mainCard = container.querySelector('#main-card')
 
   let currentMode = 'topics'
   let currentSummary = null
   let currentVideoId = null
-  let currentTitle   = null
+  let currentTitle = null
 
   // Mode selector: sliding pill
   function updatePill(activeBtn) {
-    const rect    = activeBtn.getBoundingClientRect()
-    const parent  = modeSelector.getBoundingClientRect()
-    modePill.style.left  = `${rect.left - parent.left}px`
+    const rect = activeBtn.getBoundingClientRect()
+    const parent = modeSelector.getBoundingClientRect()
+    modePill.style.left = `${rect.left - parent.left}px`
     modePill.style.width = `${rect.width}px`
   }
 
@@ -163,14 +163,14 @@ export function renderApp(container) {
       const data = await summarize(url, currentMode)
       currentSummary = data.summary
       currentVideoId = videoId
-      currentTitle   = data.title
+      currentTitle = data.title
 
       addToHistory({
-        title:    currentTitle,
+        title: currentTitle,
         url,
         video_id: currentVideoId,
-        summary:  currentSummary,
-        mode:     currentMode,
+        summary: currentSummary,
+        mode: currentMode,
       })
 
       loader.stop()
@@ -213,7 +213,7 @@ export function renderApp(container) {
       </div>
     `
 
-    const contentEl   = resultArea.querySelector('#result-content')
+    const contentEl = resultArea.querySelector('#result-content')
     const downloadRow = resultArea.querySelector('#download-row')
 
     typewriterReveal(contentEl, summary, () => {

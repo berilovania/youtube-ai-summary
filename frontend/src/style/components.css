@@ -75,7 +75,6 @@
   width: 100%;
   padding: 14px 24px;
   background: linear-gradient(135deg, var(--glow-primary) 0%, #d946ef 100%);
-  background-size: 200% auto;
   border: none;
   border-radius: var(--radius-md);
   color: white;
@@ -83,13 +82,11 @@
   font-size: 1.05rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform var(--transition), box-shadow var(--transition), background-position 0.5s;
+  transition: transform var(--transition), box-shadow var(--transition);
 }
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 28px rgba(217, 70, 239, 0.45);
-  background-position: right center;
-  animation: btnShimmer 1.5s linear infinite;
 }
 .btn-primary:active { transform: translateY(0); }
 .btn-primary:disabled {
@@ -177,8 +174,8 @@
   margin-top: 32px;
   transition: box-shadow 0.5s ease;
 }
-.result-card.glow-loading { animation: glowPulseFast 1s ease-in-out infinite; }
-.result-card.glow-success { animation: glowCyan 0.8s ease-in-out 3; }
+.glass.glow-loading { animation: glowPulseFast 1s ease-in-out infinite; }
+.glass.glow-success { animation: glowCyan 0.8s ease-in-out 3; }
 
 .result-label {
   font-size: 0.75rem;
@@ -211,23 +208,6 @@
   padding-top: 2px;
 }
 .topic-indicator.blink { animation: blinkOnce 0.6s ease; }
-
-/* ── Transcript box ──────────────────────────────────── */
-.transcript-box {
-  background: rgba(10, 10, 20, 0.8);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
-  padding: 16px;
-  margin-top: 24px;
-  max-height: 160px;
-  overflow-y: auto;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  line-height: 1.6;
-  scrollbar-width: thin;
-  scrollbar-color: var(--glass-border) transparent;
-}
 
 /* ── Cards de histórico ──────────────────────────────── */
 .history-grid {
