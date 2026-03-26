@@ -42,7 +42,7 @@ O projeto é dividido em dois serviços independentes:
 ```
 ┌─────────────────────────────────┐       ┌──────────────────────────────┐
 │         Frontend (Vite)         │       │       Backend (FastAPI)      │
-│         localhost:5173          │──────▶│        localhost:8000        │
+│         localhost:5173          │──────▶        localhost:8000        │
 │                                 │       │                              │
 │  SPA Vanilla JS                 │       │  POST /summarize             │
 │  ├── views/app.js               │       │  POST /export/pdf            │
